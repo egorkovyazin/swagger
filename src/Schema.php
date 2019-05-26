@@ -50,6 +50,12 @@ class Schema extends AbstractModel
     /** @var array */
     private $allOf = [];
 
+    /** @var array */
+    private $oneOf = [];
+
+    /** @var array */
+    private $anyOf = [];
+
     /** @var Schema */
     private $additionalProperties;
 
@@ -71,6 +77,14 @@ class Schema extends AbstractModel
 
         foreach ($data['allOf'] ?? [] as $schema) {
             $this->allOf[] = new self($schema);
+        }
+
+        foreach ($data['oneOf'] ?? [] as $schema) {
+            $this->oneOf[] = new self($schema);
+        }
+
+        foreach ($data['anyOf'] ?? [] as $schema) {
+            $this->anyOf[] = new self($schema);
         }
 
         if (isset($data['additionalProperties'])) {
@@ -115,6 +129,8 @@ class Schema extends AbstractModel
             'properties' => $this->properties,
             'additionalProperties' => $additionalProperties,
             'allOf' => $this->allOf ?: null,
+            'oneOf' => $this->oneOf ?: null,
+            'anyOf' => $this->anyOf ?: null,
         ], $this->doExportType());
     }
 
@@ -232,6 +248,22 @@ class Schema extends AbstractModel
     public function getAllOf(): array
     {
         return $this->allOf;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOneOf(): array
+    {
+        return $this->oneOf;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAnyOf(): array
+    {
+        return $this->anyOf;
     }
 
     /**
